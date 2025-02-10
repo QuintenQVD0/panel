@@ -2,20 +2,9 @@
 # Pelican Production Dockerfile
 
 # ================================
-# Stage 1: Build PHP Base Image
-# ================================
-FROM --platform=$TARGETOS/$TARGETARCH php:8.3-fpm-alpine AS base
-
-ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-
-RUN install-php-extensions bcmath gd intl zip opcache pcntl posix pdo_mysql
-
-RUN rm /usr/local/bin/install-php-extensions
-
-# ================================
 # Stage 2-1: Composer Install
 # ================================
-FROM --platform=$TARGETOS/$TARGETARCH base AS composer
+FROM base-php:$TARGETARCH AS composer
 
 WORKDIR /build
 
@@ -65,7 +54,7 @@ RUN yarn run build
 # ================================
 # Stage 4: Build Final Application Image
 # ================================
-FROM --platform=$TARGETOS/$TARGETARCH base AS final
+FROM base-php:$TARGETARCH AS final
 
 WORKDIR /var/www/html
 
