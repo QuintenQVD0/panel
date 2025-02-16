@@ -24,9 +24,12 @@ else
 fi
 
 ## Ensure APP_TIMEZONE is always set to TZ in .env
-if grep -q "APP_TIMEZONE=" /pelican-data/.env; then
+if grep -q "^APP_TIMEZONE=" /pelican-data/.env; then
+  # Update existing APP_TIMEZONE
   sed -i "s|^APP_TIMEZONE=.*|APP_TIMEZONE=$TZ|" /pelican-data/.env
 else
+  # Ensure file ends with a newline before appending
+  echo >> /pelican-data/.env
   echo "APP_TIMEZONE=$TZ" >> /pelican-data/.env
 fi
 
