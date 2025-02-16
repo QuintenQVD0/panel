@@ -23,6 +23,13 @@ else
   echo -e "APP_INSTALLED=false" >> /pelican-data/.env
 fi
 
+## Ensure APP_TIMEZONE is always set to TZ in .env
+if grep -q "APP_TIMEZONE=" /pelican-data/.env; then
+  sed -i "s|^APP_TIMEZONE=.*|APP_TIMEZONE=$TZ|" /pelican-data/.env
+else
+  echo "APP_TIMEZONE=$TZ" >> /pelican-data/.env
+fi
+
 mkdir /pelican-data/database /var/www/html/storage/logs/supervisord 2>/dev/null
 
 if ! grep -q "APP_KEY=" .env || grep -q "APP_KEY=$" .env; then
